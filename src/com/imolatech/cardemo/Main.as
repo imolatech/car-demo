@@ -25,6 +25,7 @@
 	import src.com.imolatech.kinect.GestureDetector;
 	import src.com.imolatech.kinect.UserSelector;
 	import src.com.imolatech.kinect.ValueHolder;
+	import src.com.imolatech.kinect.JointSmoother;
 	
 	public class Main extends MovieClip {
 		//声明变量
@@ -34,6 +35,7 @@
 		public var theSelectedUser:User		//被选中的用户
 		public var getUser:UserSelector;	//外部类UserSelector的实例
 		public var getGesture:GestureDetector;	//外部类GestureDetector的实例
+		public var smoothedJoints:JointSmoother;
 
 		//每个按键都单独设置了一个用于悬停的Timer，这里也许可以简化。
 		public var hoverTimerc1:Timer=new Timer(hoverTime,1);
@@ -77,7 +79,6 @@
 		public static var sensorDistance:Number = 2000;
 		public static var handDistance:Number = -50;
 		public static var hoverTime:Number = 1000;
-		//public static var sensorDistance:Number = 2000
 		
 		public function Main()
 		{
@@ -200,8 +201,10 @@
 		{
 			getUser = new UserSelector(kinect);
 			theSelectedUser = getUser.theSelectedUser;
+			smoothedJoints = new JointSmoother(theSelectedUser, 8); //JointSmoother类，第一个参数为需要smooth的User, 第二个参数为smooth系数，从0到20均可
 			getGesture = new GestureDetector(theSelectedUser);
 			getGesture.detectStart();
+			
 			//检测到向左挥手时触发的翻页事件
 			if(ValueHolder.righthandSwipeLeft == true || ValueHolder.lefthandSwipeLeft == true)
 			{
@@ -237,31 +240,19 @@
 				picLoader.load(new URLRequest(prePic));
 
 			}
-		}
-		
-		//xml文件读取完成后一直循环的事件
-		private function enterFrameHandler(e:Event):void
-		{
+			
 			skeletonContainer.graphics.clear();
 			if(theSelectedUser !== null)
 			{
-				//在kinect窗口中给被选中的人的躯干部位画点
-				/**
-				for each(var joint:SkeletonJoint in theSelectedUser.skeletonJoints)
-				{
-					skeletonContainer.graphics.beginFill(0x00FC00);
-					skeletonContainer.graphics.drawCircle(joint.position.rgbRelative.x*kinectWindowWidth, joint.position.rgbRelative.y*kinectWindowHeight, 3);
-					skeletonContainer.graphics.endFill();
-				}
-				*/
 				getUser.displaySelectedUser(kinectWindowWidth, kinectWindowHeight);
+				
 				//左右手光标跟踪用户骨骼的方法
-				if(theSelectedUser.rightHand.position.world.z - theSelectedUser.torso.position.world.z < handDistance)
+				if(smoothedJoints.smoothedRighthandZ - smoothedJoints.smoothedTorsoZ < handDistance)
 				{
 					cursorRighthand.visible = true;
 					righthandLoadingCircle.visible = true;
-					var righthandToTorsoX:Number = theSelectedUser.rightHand.position.world.x - theSelectedUser.torso.position.world.x;
-					var righthandToTorsoY:Number = theSelectedUser.rightHand.position.world.y - theSelectedUser.torso.position.world.y;
+					var righthandToTorsoX:Number = smoothedJoints.smoothedRighthandX - smoothedJoints.smoothedTorsoX;
+					var righthandToTorsoY:Number = smoothedJoints.smoothedRighthandY - smoothedJoints.smoothedTorsoY;
 					cursorRighthand.x = (righthandToTorsoX+200)/600*stage.stageWidth;
 					cursorRighthand.y = righthandToTorsoY/300*stage.stageHeight*-1+stage.stageHeight;
 					righthandLoadingCircle.x = cursorRighthand.x;
@@ -304,7 +295,11 @@
 				righthandLoadingCircle.visible = false;
 				lefthandLoadingCircle.visible = false;
 			}
-	
+		}
+		
+		//xml文件读取完成后一直循环的事件
+		private function enterFrameHandler(e:Event):void
+		{
 			//检测左手是否碰到任何按键
 			if(cursorLefthand.hitTestObject(m1) || cursorLefthand.hitTestObject(m2) || cursorLefthand.hitTestObject(m3) || cursorLefthand.hitTestObject(m4) 
 	  		 || cursorLefthand.hitTestObject(m5) || cursorLefthand.hitTestObject(m6) || cursorLefthand.hitTestObject(c1) || cursorLefthand.hitTestObject(c2)
