@@ -1,11 +1,12 @@
-﻿package  {
+﻿package src.com.imolatech.kinect
+{
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	import flash.events.Event;
 	import flash.utils.Timer;
 	import flash.display.Sprite;
 	
-	public class valueHolder extends Sprite 
+	public class ValueHolder extends Sprite 
 	{
 		public static var righthandHorizontalMoveStep:Number;
 		public static var righthandVerticalMoveStep:Number;
@@ -49,7 +50,7 @@
 
 		public static var idleTimer:Timer = new Timer(1000,1);
 		
-		public function valueHolder() 
+		public function ValueHolder() 
 		{
 		
 		}

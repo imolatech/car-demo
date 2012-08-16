@@ -1,4 +1,5 @@
-﻿package  {
+﻿package src.com.imolatech.cardemo
+{
 	import com.as3nui.nativeExtensions.air.kinect.Kinect;
 	import com.as3nui.nativeExtensions.air.kinect.KinectSettings;
 	import com.as3nui.nativeExtensions.air.kinect.events.CameraImageEvent;
@@ -21,15 +22,18 @@
 	import flash.net.URLRequest;
 	import flash.display.Loader
 	import flash.events.MouseEvent;
+	import src.com.imolatech.kinect.GestureDetector;
+	import src.com.imolatech.kinect.UserSelector;
+	import src.com.imolatech.kinect.ValueHolder;
 	
 	public class Main extends MovieClip {
 		//声明变量
 		public var kinect:Kinect;
 		public var kinectImageBmp:Bitmap;	//用于储存kinect图像的bmp
-		public var skeletonContainer:Sprite;	//用于储存用户骨骼图形
+		public static var skeletonContainer:Sprite;	//用于储存用户骨骼图形
 		public var theSelectedUser:User		//被选中的用户
-		public var getUser:getSelectedUser;	//外部类getSelectedUser的实例
-		public var getGesture:gestureDetector;	//外部类gestureDetector的实例
+		public var getUser:UserSelector;	//外部类UserSelector的实例
+		public var getGesture:GestureDetector;	//外部类GestureDetector的实例
 
 		//每个按键都单独设置了一个用于悬停的Timer，这里也许可以简化。
 		public var hoverTimerc1:Timer=new Timer(hoverTime,1);
@@ -61,12 +65,12 @@
 		public var colorHit:Number = 1;		//光标碰到的颜色按钮
 		public var modelHit:Number = 1;		//光标碰到的车型按钮
 		public var tireHit:Number = 1;			//光标碰到的轮胎按钮
-		public var colorCircleChangetoX:Number;	//颜色按钮下面的绿圈移动到的新X坐标
-		public var colorCircleChangetoY:Number;	//颜色按钮下面的绿圈移动到的新y坐标
-		public var modelCircleChangetoX:Number;	//车型按钮下面的绿圈移动到的新X坐标
-		public var modelCircleChangetoY:Number;	//车型按钮下面的绿圈移动到的新y坐标
-		public var tireCircleChangetoX:Number;		//轮胎按钮下面的绿圈移动到的新X坐标
-		public var tireCircleChangetoY:Number;		//轮胎按钮下面的绿圈移动到的新y坐标
+		public var newColorCircleX:Number;	//颜色按钮下面的绿圈移动到的新X坐标
+		public var newColorCircleY:Number;	//颜色按钮下面的绿圈移动到的新y坐标
+		public var newModelCircleX:Number;	//车型按钮下面的绿圈移动到的新X坐标
+		public var newModelCircleY:Number;	//车型按钮下面的绿圈移动到的新y坐标
+		public var newTireCircleX:Number;		//轮胎按钮下面的绿圈移动到的新X坐标
+		public var newTireCircleY:Number;		//轮胎按钮下面的绿圈移动到的新y坐标
 		public var lefthandHitButton:Boolean;	//检测左手是否碰到任何按键
 		public var righthandHitButton:Boolean;	//检测右手是否碰到任何按键
 		
@@ -75,7 +79,7 @@
 		public static var hoverTime:Number = 1000;
 		//public static var sensorDistance:Number = 2000
 		
-		public function main()
+		public function Main()
 		{
 			//stage.displayState=StageDisplayState.FULL_SCREEN;    //全屏
 			stage.scaleMode=StageScaleMode.SHOW_ALL;    //全部显示
@@ -116,12 +120,12 @@
 			kinectEventTimer.start();
 			
 			//下面是六个箭头按钮的侦听器
-			dup.addEventListener(MouseEvent.CLICK, distanceUp);			
-			ddown.addEventListener(MouseEvent.CLICK, distanceDown);
-			hforward.addEventListener(MouseEvent.CLICK, handForward);
-			hbackward.addEventListener(MouseEvent.CLICK, handBackward);
-			hoverUp.addEventListener(MouseEvent.CLICK, hovertimeUp);
-			hoverDown.addEventListener(MouseEvent.CLICK, hovertimeDown);
+			distanceUpButton.addEventListener(MouseEvent.CLICK, distanceUp);			
+			distanceDownButton.addEventListener(MouseEvent.CLICK, distanceDown);
+			handForwardButton.addEventListener(MouseEvent.CLICK, handForward);
+			handBackwardButton.addEventListener(MouseEvent.CLICK, handBackward);
+			hoverUpButton.addEventListener(MouseEvent.CLICK, hovertimeUp);
+			hoverDownButton.addEventListener(MouseEvent.CLICK, hovertimeDown);
 			
 			picList_XML=new XML(xmlLoader.data);
 			picLoader.load(new URLRequest(picList_XML.model[0].tire[0].color[0]+1+".png"));	//程序初始化时加载的第一张图片
@@ -194,12 +198,12 @@
 		//以下是所有需要用到kinect数据的function
 		private function kinectEvent(e:TimerEvent):void
 		{
-			getUser = new getSelectedUser(kinect);
+			getUser = new UserSelector(kinect);
 			theSelectedUser = getUser.theSelectedUser;
-			getGesture = new gestureDetector(theSelectedUser);
+			getGesture = new GestureDetector(theSelectedUser);
 			getGesture.detectStart();
 			//检测到向左挥手时触发的翻页事件
-			if(valueHolder.righthandSwipeLeft == true || valueHolder.lefthandSwipeLeft == true)
+			if(ValueHolder.righthandSwipeLeft == true || ValueHolder.lefthandSwipeLeft == true)
 			{
 				rightLeftArrow.gotoAndPlay(1);
 
@@ -211,14 +215,12 @@
 				{
 					picNum++;
 				}
-				trace(picNum);
-				trace("next picture");
 				var nextPic:String=picList_XML.model[modelNum-1].tire[tireNum-1].color[colorNum-1] + picNum+".png";
 				picLoader.unload();
 				picLoader.load(new URLRequest(nextPic));
 			}
 			//检测到向右挥手时触发的翻页事件
-			if(valueHolder.lefthandSwipeRight == true || valueHolder.righthandSwipeRight == true)
+			if(ValueHolder.lefthandSwipeRight == true || ValueHolder.righthandSwipeRight == true)
 			{
 				leftRightArrow.gotoAndPlay(1);
 
@@ -230,8 +232,6 @@
 				{
 					picNum--;
 				}
-				trace(picNum);
-				trace("previous picture");
 				var prePic:String=picList_XML.model[modelNum-1].tire[tireNum-1].color[colorNum-1] + picNum +".png";
 				picLoader.unload();
 				picLoader.load(new URLRequest(prePic));
@@ -246,25 +246,24 @@
 			if(theSelectedUser !== null)
 			{
 				//在kinect窗口中给被选中的人的躯干部位画点
+				/**
 				for each(var joint:SkeletonJoint in theSelectedUser.skeletonJoints)
 				{
 					skeletonContainer.graphics.beginFill(0x00FC00);
 					skeletonContainer.graphics.drawCircle(joint.position.rgbRelative.x*kinectWindowWidth, joint.position.rgbRelative.y*kinectWindowHeight, 3);
 					skeletonContainer.graphics.endFill();
 				}
+				*/
+				getUser.displaySelectedUser(kinectWindowWidth, kinectWindowHeight);
 				//左右手光标跟踪用户骨骼的方法
 				if(theSelectedUser.rightHand.position.world.z - theSelectedUser.torso.position.world.z < handDistance)
 				{
 					cursorRighthand.visible = true;
 					righthandLoadingCircle.visible = true;
-					
-					//cursorRighthand.x = (theSelectedUser.rightHand.position.worldRelative.x*stage.stageWidth*1.3)+825-150;
-					//cursorRighthand.y = (theSelectedUser.rightHand.position.worldRelative.y*stage.stageHeight*-1.3)+1000;
 					var righthandToTorsoX:Number = theSelectedUser.rightHand.position.world.x - theSelectedUser.torso.position.world.x;
 					var righthandToTorsoY:Number = theSelectedUser.rightHand.position.world.y - theSelectedUser.torso.position.world.y;
 					cursorRighthand.x = (righthandToTorsoX+200)/600*stage.stageWidth;
 					cursorRighthand.y = righthandToTorsoY/300*stage.stageHeight*-1+stage.stageHeight;
-					
 					righthandLoadingCircle.x = cursorRighthand.x;
 					righthandLoadingCircle.y = cursorRighthand.y;
 				}
@@ -281,15 +280,10 @@
 				{
 					cursorLefthand.visible = true;
 					lefthandLoadingCircle.visible = true;
-					//cursorLefthand.x = (theSelectedUser.leftHand.position.worldRelative.x*stage.stageWidth*1.3)+825+150;
-					//cursorLefthand.y = (theSelectedUser.leftHand.position.worldRelative.y*stage.stageHeight*-1.3)+1000;
 					var lefthandToTorsoX:Number = theSelectedUser.leftHand.position.world.x - theSelectedUser.torso.position.world.x;
 					var lefthandToTorsoY:Number = theSelectedUser.leftHand.position.world.y - theSelectedUser.torso.position.world.y;
 					cursorLefthand.x = (lefthandToTorsoX+400)/600*stage.stageWidth;
 					cursorLefthand.y = lefthandToTorsoY/300*stage.stageHeight*-1+stage.stageHeight;
-					
-					righthandLoadingCircle.x = cursorRighthand.x;
-					righthandLoadingCircle.y = cursorRighthand.y;
 					lefthandLoadingCircle.x = cursorLefthand.x;
 					lefthandLoadingCircle.y = cursorLefthand.y;
 				}
@@ -358,8 +352,8 @@
 				colorHit = 1;
 				hoverTimerc1.addEventListener(TimerEvent.TIMER,hitColorButton);
 				hoverTimerc1.start();
-				colorCircleChangetoX = 1512;
-				colorCircleChangetoY = 160;
+				newColorCircleX = 1512;
+				newColorCircleY = 160;
 				if(lefthandHitButton == false && colorHit !== colorNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -385,8 +379,8 @@
 				colorHit = 2;
 				hoverTimerc2.addEventListener(TimerEvent.TIMER,hitColorButton);
 				hoverTimerc2.start();
-				colorCircleChangetoX = 1510;
-				colorCircleChangetoY = 265;
+				newColorCircleX = 1510;
+				newColorCircleY = 265;
 				if(lefthandHitButton == false && colorHit !== colorNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -412,8 +406,8 @@
 				colorHit = 3;
 				hoverTimerc3.addEventListener(TimerEvent.TIMER,hitColorButton);
 				hoverTimerc3.start();
-				colorCircleChangetoX = 1510;
-				colorCircleChangetoY = 369;
+				newColorCircleX = 1510;
+				newColorCircleY = 369;
 				if(lefthandHitButton == false && colorHit !== colorNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -439,8 +433,8 @@
 				colorHit = 4;
 				hoverTimerc4.addEventListener(TimerEvent.TIMER,hitColorButton);
 				hoverTimerc4.start();
-				colorCircleChangetoX = 1510;
-				colorCircleChangetoY = 473;
+				newColorCircleX = 1510;
+				newColorCircleY = 473;
 				if(lefthandHitButton == false && colorHit !== colorNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -466,8 +460,8 @@
 				colorHit = 5;
 				hoverTimerc5.addEventListener(TimerEvent.TIMER,hitColorButton);
 				hoverTimerc5.start();
-				colorCircleChangetoX = 1510;
-				colorCircleChangetoY = 577;
+				newColorCircleX = 1510;
+				newColorCircleY = 577;
 				if(lefthandHitButton == false && colorHit !== colorNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -493,8 +487,8 @@
 				modelHit = 1;
 				hoverTimerm1.addEventListener(TimerEvent.TIMER,hitModelButton);
 				hoverTimerm1.start();
-				modelCircleChangetoX = 160;
-				modelCircleChangetoY = 935;
+				newModelCircleX = 160;
+				newModelCircleY = 935;
 				if(lefthandHitButton == false && modelHit !== modelNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -520,8 +514,8 @@
 				modelHit = 2;
 				hoverTimerm2.addEventListener(TimerEvent.TIMER,hitModelButton);
 				hoverTimerm2.start();
-				modelCircleChangetoX = 422;
-				modelCircleChangetoY = 935;
+				newModelCircleX = 422;
+				newModelCircleY = 935;
 				if(lefthandHitButton == false && modelHit !== modelNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -547,8 +541,8 @@
 				modelHit = 3;
 				hoverTimerm3.addEventListener(TimerEvent.TIMER,hitModelButton);
 				hoverTimerm3.start();
-				modelCircleChangetoX = 695;
-				modelCircleChangetoY = 935;
+				newModelCircleX = 695;
+				newModelCircleY = 935;
 				if(lefthandHitButton == false && modelHit !== modelNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -574,8 +568,8 @@
 				modelHit = 4;
 				hoverTimerm4.addEventListener(TimerEvent.TIMER,hitModelButton);
 				hoverTimerm4.start();
-				modelCircleChangetoX = 975;
-				modelCircleChangetoY = 935;
+				newModelCircleX = 975;
+				newModelCircleY = 935;
 				if(lefthandHitButton == false && modelHit !== modelNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -601,8 +595,8 @@
 				modelHit = 5;
 				hoverTimerm5.addEventListener(TimerEvent.TIMER,hitModelButton);
 				hoverTimerm5.start();
-				modelCircleChangetoX = 1235;
-				modelCircleChangetoY = 935;
+				newModelCircleX = 1235;
+				newModelCircleY = 935;
 				if(lefthandHitButton == false && modelHit !== modelNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -628,8 +622,8 @@
 				modelHit = 6;
 				hoverTimerm6.addEventListener(TimerEvent.TIMER,hitModelButton);
 				hoverTimerm6.start();
-				modelCircleChangetoX = 1480;
-				modelCircleChangetoY = 935;
+				newModelCircleX = 1480;
+				newModelCircleY = 935;
 				if(lefthandHitButton == false && modelHit !== modelNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -655,8 +649,8 @@
 				tireHit = 1;
 				hoverTimert1.addEventListener(TimerEvent.TIMER,hitTireButton);
 				hoverTimert1.start();
-				tireCircleChangetoX = 163;
-				tireCircleChangetoY = 400;
+				newTireCircleX = 163;
+				newTireCircleY = 400;
 				if(lefthandHitButton == false && tireHit !== tireNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -682,8 +676,8 @@
 				tireHit = 2;
 				hoverTimert2.addEventListener(TimerEvent.TIMER,hitTireButton);
 				hoverTimert2.start();
-				tireCircleChangetoX = 163;
-				tireCircleChangetoY = 565;
+				newTireCircleX = 163;
+				newTireCircleY = 565;
 				if(lefthandHitButton == false && tireHit !== tireNum)
 				{
 					righthandLoadingCircle.gotoAndPlay(2);
@@ -715,8 +709,8 @@
 			if(colorNum !== colorHit)
 			{
 				colorNum = colorHit;
-				colorCircle.x = colorCircleChangetoX;
-				colorCircle.y = colorCircleChangetoY;
+				colorCircle.x = newColorCircleX;
+				colorCircle.y = newColorCircleY;
 				colorCircle.gotoAndPlay(1);
 				var changePic:String=picList_XML.model[modelNum-1].tire[tireNum-1].color[colorNum-1] + picNum +".png";
 				picLoader.unload();
@@ -729,8 +723,8 @@
 			if(modelNum !== modelHit)
 			{
 				modelNum = modelHit;
-				modelCircle.x = modelCircleChangetoX;
-				modelCircle.y = modelCircleChangetoY;
+				modelCircle.x = newModelCircleX;
+				modelCircle.y = newModelCircleY;
 				modelCircle.gotoAndPlay(1);
 				var changePic:String=picList_XML.model[modelNum-1].tire[tireNum-1].color[colorNum-1] + picNum +".png";
 				picLoader.unload();
@@ -743,8 +737,8 @@
 			if(tireNum !== tireHit)
 			{
 				tireNum = tireHit;
-				tireCircle.x = tireCircleChangetoX;
-				tireCircle.y = tireCircleChangetoY;
+				tireCircle.x = newTireCircleX;
+				tireCircle.y = newTireCircleY;
 				tireCircle.gotoAndPlay(1);
 				var changePic:String=picList_XML.model[modelNum-1].tire[tireNum-1].color[colorNum-1] + picNum +".png";
 				picLoader.unload();
