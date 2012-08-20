@@ -1,4 +1,4 @@
-﻿package src.com.imolatech.kinect
+﻿package com.imolatech.kinect
 {
 	import flash.display.MovieClip;
 	import flash.geom.Point;

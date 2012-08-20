@@ -1,4 +1,4 @@
-﻿package src.com.imolatech.cardemo
+﻿package com.imolatech.cardemo
 {
 	import com.as3nui.nativeExtensions.air.kinect.Kinect;
 	import com.as3nui.nativeExtensions.air.kinect.KinectSettings;
@@ -7,6 +7,10 @@
 	import com.as3nui.nativeExtensions.air.kinect.data.User;
 	import com.as3nui.nativeExtensions.air.kinect.constants.CameraResolution;
 	import com.as3nui.nativeExtensions.air.kinect.events.UserEvent;
+	import com.imolatech.kinect.GestureDetector;
+	import com.imolatech.kinect.UserSelector;
+	import com.imolatech.kinect.ValueHolder;
+	import com.imolatech.kinect.JointSmoother;
 	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -22,10 +26,6 @@
 	import flash.net.URLRequest;
 	import flash.display.Loader
 	import flash.events.MouseEvent;
-	import src.com.imolatech.kinect.GestureDetector;
-	import src.com.imolatech.kinect.UserSelector;
-	import src.com.imolatech.kinect.ValueHolder;
-	import src.com.imolatech.kinect.JointSmoother;
 	
 	public class Main extends MovieClip {
 		//声明变量
@@ -93,7 +93,7 @@
 			//首先检测是否支持kinect
 			if(Kinect.isSupported())
 			{
-				xmlLoader.load(new URLRequest("piclistok.xml"));    //图片存放信息在piclist.xml中
+				xmlLoader.load(new URLRequest("app:/config/CarPictures.xml"));    //图片存放信息在piclist.xml中
 				xmlLoader.addEventListener(Event.COMPLETE,xmlLoaded);     //使用complete事件以备远程操作
 				kinectImageBmp = new Bitmap;
 				kinectImageWindow.addChild(kinectImageBmp);

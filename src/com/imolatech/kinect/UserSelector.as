@@ -1,10 +1,10 @@
-﻿package src.com.imolatech.kinect 
+﻿package com.imolatech.kinect 
 {
 	import com.as3nui.nativeExtensions.air.kinect.data.User;
 	import com.as3nui.nativeExtensions.air.kinect.data.SkeletonJoint
 	import com.as3nui.nativeExtensions.air.kinect.Kinect;
-	import src.com.imolatech.kinect.ValueHolder;
-	import src.com.imolatech.cardemo.Main;
+	import com.imolatech.kinect.ValueHolder;
+	import com.imolatech.cardemo.Main;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
