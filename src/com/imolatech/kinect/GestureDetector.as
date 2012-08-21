@@ -38,7 +38,7 @@
 			this.theSelectedUser = theSelectedUser;
 		}
 		
-		public function detectStart():void
+		public function detectSwipe():void
 		{
 			if(theSelectedUser !== null)
 			{
@@ -296,6 +296,73 @@
 				{
 					ValueHolder.lefthandMoveDownSum=0;
 					ValueHolder.lefthandSwipeDown = false;
+				}
+			}
+		}
+		
+		public function detectWave():void
+		{
+			if(theSelectedUser !== null)
+			{
+				
+				if(ValueHolder.waveTimer.running == false)
+				{
+					ValueHolder.righthandWaveSum = 0;
+				}
+				
+				if(ValueHolder.righthandWaveSum ==4)
+				{
+					ValueHolder.righthandWaveSum = 0;
+					ValueHolder.righthandWave = true;
+					ValueHolder.idleTimer.start();
+				}
+				else
+				{
+					ValueHolder.righthandWave = false;
+				}
+				
+				if(ValueHolder.waveTimer.running == false && ValueHolder.idleTimer.running == false)
+				{
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && ValueHolder.righthandPrePosition == 0)
+					{
+						ValueHolder.righthandPrePosition = 1;
+					}
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && ValueHolder.righthandPrePosition == 0)
+					{
+						ValueHolder.righthandPrePosition = 2;
+					}
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && ValueHolder.righthandPrePosition == 2)
+					{
+						ValueHolder.righthandPrePosition = 1;
+						ValueHolder.righthandWaveSum++;
+						ValueHolder.waveTimer.start();
+					}
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && ValueHolder.righthandPrePosition == 1)
+					{
+						ValueHolder.righthandPrePosition = 2;
+						ValueHolder.righthandWaveSum++;
+						ValueHolder.waveTimer.start();
+					}
+				}
+				
+				if(ValueHolder.waveTimer.running == true && ValueHolder.idleTimer.running == false)
+				{
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && ValueHolder.righthandPrePosition == 2)
+					{
+						ValueHolder.righthandPrePosition = 1;
+						ValueHolder.righthandWaveSum++;
+						ValueHolder.waveTimer.stop();
+						ValueHolder.waveTimer.reset();
+						ValueHolder.waveTimer.start();
+					}
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && ValueHolder.righthandPrePosition == 1)
+					{
+						ValueHolder.righthandPrePosition = 2;
+						ValueHolder.righthandWaveSum++;
+						ValueHolder.waveTimer.stop();
+						ValueHolder.waveTimer.reset();
+						ValueHolder.waveTimer.start();
+					}
 				}
 			}
 		}

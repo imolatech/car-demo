@@ -203,7 +203,15 @@
 			theSelectedUser = getUser.theSelectedUser;
 			smoothedJoints = new JointSmoother(theSelectedUser, 8); //JointSmoother类，第一个参数为需要smooth的User, 第二个参数为smooth系数，从0到20均可
 			getGesture = new GestureDetector(theSelectedUser);
-			getGesture.detectStart();
+			getGesture.detectSwipe();
+			getGesture.detectWave();
+			
+			//trace(ValueHolder.righthandWaveSum);
+			//trace(ValueHolder.righthandPrePosition);
+			if(ValueHolder.righthandWave == true)
+			{
+				trace("WAVE!!!!!!!")
+			}
 			
 			//检测到向左挥手时触发的翻页事件
 			if(ValueHolder.righthandSwipeLeft == true || ValueHolder.lefthandSwipeLeft == true)
@@ -244,8 +252,9 @@
 			skeletonContainer.graphics.clear();
 			if(theSelectedUser !== null)
 			{
+				traceText.text = String(ValueHolder.righthandWaveSum);
 				getUser.displaySelectedUser(kinectWindowWidth, kinectWindowHeight);
-				
+				//trace(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x);
 				//左右手光标跟踪用户骨骼的方法
 				if(smoothedJoints.smoothedRighthandZ - smoothedJoints.smoothedTorsoZ < handDistance)
 				{

@@ -23,6 +23,8 @@
 		public static var righthandSwipeUp:Boolean;
 		public static var righthandSwipeDown:Boolean;
 		public static var righthandWave:Boolean;
+		public static var righthandPrePosition:Number = 0;
+		public static var righthandWaveSum:Number = 0;
 		
 		public static var lefthandHorizontalMoveStep:Number;
 		public static var lefthandVerticalMoveStep:Number;
@@ -49,6 +51,7 @@
 		public static var torsoZOld:Number=0;
 
 		public static var idleTimer:Timer = new Timer(1000,1);
+		public static var waveTimer:Timer = new Timer(1000,1);
 		
 		public static var righthandXArray:Array = new Array;
 		public static var righthandYArray:Array = new Array;
