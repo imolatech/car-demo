@@ -2,6 +2,7 @@
 bin-debug/
 bin-release/
 bin
+*.exe
 # Project property files
 .actionScriptProperties
 .flexProperties
