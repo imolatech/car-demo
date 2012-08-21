@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<piclistok>	
+		<model>
+				<tire>
+						<color>picture/model1/tire1/color1/</color>
+						<color>picture/model1/tire1/color2/</color>
+						<color>picture/model1/tire1/color3/</color>
+						<color>picture/model1/tire1/color4/</color>
+						<color>picture/model1/tire1/color5/</color>
+				</tire>
+				<tire>
+						<color>picture/model1/tire2/color1/</color>
+						<color>picture/model1/tire2/color2/</color>
+						<color>picture/model1/tire2/color3/</color>
+						<color>picture/model1/tire2/color4/</color>
+						<color>picture/model1/tire2/color5/</color>
+				</tire>
+		</model>
+		
+		<model>
+				<tire>
+						<color>picture/model2/tire1/color1/</color>
+						<color>picture/model2/tire1/color2/</color>
+						<color>picture/model2/tire1/color3/</color>
+						<color>picture/model2/tire1/color4/</color>
+						<color>picture/model2/tire1/color5/</color>
+				</tire>
+				<tire>
+						<color>picture/model2/tire2/color1/</color>
+						<color>picture/model2/tire2/color2/</color>
+						<color>picture/model2/tire2/color3/</color>
+						<color>picture/model2/tire2/color4/</color>
+						<color>picture/model2/tire2/color5/</color>
+				</tire>
+		</model>
+		
+		<model>
+				<tire>
+						<color>picture/model3/tire1/color1/</color>
+						<color>picture/model3/tire1/color2/</color>
+						<color>picture/model3/tire1/color3/</color>
+						<color>picture/model3/tire1/color4/</color>
+						<color>picture/model3/tire1/color5/</color>
+				</tire>
+				<tire>
+						<color>picture/model3/tire2/color1/</color>
+						<color>picture/model3/tire2/color2/</color>
+						<color>picture/model3/tire2/color3/</color>
+						<color>picture/model3/tire2/color4/</color>
+						<color>picture/model3/tire2/color5/</color>
+				</tire>
+		</model>
+		
+		<model>
+				<tire>
+						<color>picture/model4/tire1/color1/</color>
+						<color>picture/model4/tire1/color2/</color>
+						<color>picture/model4/tire1/color3/</color>
+						<color>picture/model4/tire1/color4/</color>
+						<color>picture/model4/tire1/color5/</color>
+				</tire>
+				<tire>
+						<color>picture/model4/tire2/color1/</color>
+						<color>picture/model4/tire2/color2/</color>
+						<color>picture/model4/tire2/color3/</color>
+						<color>picture/model4/tire2/color4/</color>
+						<color>picture/model4/tire2/color5/</color>
+
+				</tire>
+		</model>
+		
+		<model>
+				<tire>
+						<color>picture/model5/tire1/color1/</color>
+						<color>picture/model5/tire1/color2/</color>
+						<color>picture/model5/tire1/color3/</color>
+						<color>picture/model5/tire1/color4/</color>
+						<color>picture/model5/tire1/color5/</color>
+				</tire>
+				<tire>
+						<color>picture/model5/tire2/color1/</color>
+						<color>picture/model5/tire2/color2/</color>
+						<color>picture/model5/tire2/color3/</color>
+						<color>picture/model5/tire2/color4/</color>
+						<color>picture/model5/tire2/color5/</color>
+				</tire>
+		</model>
+		
+		<model>
+				<tire>
+						<color>picture/model6/tire1/color1/</color>
+						<color>picture/model6/tire1/color2/</color>
+						<color>picture/model6/tire1/color3/</color>
+						<color>picture/model6/tire1/color4/</color>
+						<color>picture/model6/tire1/color5/</color>
+				</tire>
+				<tire>
+						<color>picture/model6/tire2/color1/</color>
+						<color>picture/model6/tire2/color2/</color>
+						<color>picture/model6/tire2/color3/</color>
+						<color>picture/model6/tire2/color4/</color>
+						<color>picture/model6/tire2/color5/</color>
+				</tire>
+		</model>
+
+</piclistok>
