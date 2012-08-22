@@ -38,19 +38,19 @@
 		public var smoothedJoints:JointSmoother;
 
 		//每个按键都单独设置了一个用于悬停的Timer，这里也许可以简化。
-		public var hoverTimerc1:Timer=new Timer(hoverTime,1);
-		public var hoverTimerc2:Timer=new Timer(hoverTime,1);
-		public var hoverTimerc3:Timer=new Timer(hoverTime,1);
-		public var hoverTimerc4:Timer=new Timer(hoverTime,1);
-		public var hoverTimerc5:Timer=new Timer(hoverTime,1);
-		public var hoverTimerm1:Timer=new Timer(hoverTime,1);
-		public var hoverTimerm2:Timer=new Timer(hoverTime,1);
-		public var hoverTimerm3:Timer=new Timer(hoverTime,1);
-		public var hoverTimerm4:Timer=new Timer(hoverTime,1);
-		public var hoverTimerm5:Timer=new Timer(hoverTime,1);
-		public var hoverTimerm6:Timer=new Timer(hoverTime,1);
-		public var hoverTimert1:Timer=new Timer(hoverTime,1);
-		public var hoverTimert2:Timer=new Timer(hoverTime,1);
+		public var hoverTimerc1:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerc2:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerc3:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerc4:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerc5:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerm1:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerm2:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerm3:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerm4:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerm5:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimerm6:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimert1:Timer=new Timer(ValueHolder.hoverTime,1);
+		public var hoverTimert2:Timer=new Timer(ValueHolder.hoverTime,1);
 
 		public var kinectEventTimer:Timer = new Timer(50,0);	//单独为需要获取kinect数据的事件设置的Timer,由于kinect每秒最多提供30帧图像，为了保证稳定，这个Timer每秒只执行20次。
 
@@ -76,19 +76,15 @@
 		public var lefthandHitButton:Boolean;	//检测左手是否碰到任何按键
 		public var righthandHitButton:Boolean;	//检测右手是否碰到任何按键
 		
-		public static var sensorDistance:Number = 2000;
-		public static var handDistance:Number = -50;
-		public static var hoverTime:Number = 1000;
-		
 		public function Main()
 		{
 			//stage.displayState=StageDisplayState.FULL_SCREEN;    //全屏
 			stage.scaleMode=StageScaleMode.SHOW_ALL;    //全部显示
 			//Mouse.hide();  //原始鼠标隐藏
 
-			distanceText.text = String(sensorDistance); //用以显示感应区距离的文本
-			handText.text = String(handDistance * -1);	//用以显示手距离躯干距离的文本
-			hoverText.text = String(hoverTime);			//用以显示悬停时间的文本
+			distanceText.text = String(ValueHolder.sensorDistance); //用以显示感应区距离的文本
+			handText.text = String(ValueHolder.handDistance * -1);	//用以显示手距离躯干距离的文本
+			hoverText.text = String(ValueHolder.hoverTime);			//用以显示悬停时间的文本
 
 			//首先检测是否支持kinect
 			if(Kinect.isSupported())
@@ -138,62 +134,62 @@
 		//点箭头按钮触发的function
 		private function hovertimeUp(e:MouseEvent):void
 		{
-			hoverTime += 500;
-			hoverText.text = String(hoverTime);
-			hoverTimerc1=new Timer(hoverTime,1);
-			hoverTimerc2=new Timer(hoverTime,1);
-			hoverTimerc3=new Timer(hoverTime,1);
-			hoverTimerc4=new Timer(hoverTime,1);
-			hoverTimerc5=new Timer(hoverTime,1);
-			hoverTimerm1=new Timer(hoverTime,1);
-			hoverTimerm2=new Timer(hoverTime,1);
-			hoverTimerm3=new Timer(hoverTime,1);
-			hoverTimerm4=new Timer(hoverTime,1);
-			hoverTimerm5=new Timer(hoverTime,1);
-			hoverTimerm6=new Timer(hoverTime,1);
-			hoverTimert1=new Timer(hoverTime,1);
-			hoverTimert2=new Timer(hoverTime,1);
+			ValueHolder.hoverTime += 500;
+			hoverText.text = String(ValueHolder.hoverTime);
+			hoverTimerc1=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerc2=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerc3=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerc4=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerc5=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerm1=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerm2=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerm3=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerm4=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerm5=new Timer(ValueHolder.hoverTime,1);
+			hoverTimerm6=new Timer(ValueHolder.hoverTime,1);
+			hoverTimert1=new Timer(ValueHolder.hoverTime,1);
+			hoverTimert2=new Timer(ValueHolder.hoverTime,1);
 		}
 		private function hovertimeDown(e:MouseEvent):void
 		{
-			if(hoverTime>0)
+			if(ValueHolder.hoverTime>0)
 			{
-				hoverTime -= 500;
-				hoverText.text = String(hoverTime);
-				hoverTimerc1=new Timer(hoverTime,1);
-				hoverTimerc2=new Timer(hoverTime,1);
-				hoverTimerc3=new Timer(hoverTime,1);
-				hoverTimerc4=new Timer(hoverTime,1);
-				hoverTimerc5=new Timer(hoverTime,1);
-				hoverTimerm1=new Timer(hoverTime,1);
-				hoverTimerm2=new Timer(hoverTime,1);
-				hoverTimerm3=new Timer(hoverTime,1);
-				hoverTimerm4=new Timer(hoverTime,1);
-				hoverTimerm5=new Timer(hoverTime,1);
-				hoverTimerm6=new Timer(hoverTime,1);
-				hoverTimert1=new Timer(hoverTime,1);
-				hoverTimert2=new Timer(hoverTime,1);
+				ValueHolder.hoverTime -= 500;
+				hoverText.text = String(ValueHolder.hoverTime);
+				hoverTimerc1=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerc2=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerc3=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerc4=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerc5=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerm1=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerm2=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerm3=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerm4=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerm5=new Timer(ValueHolder.hoverTime,1);
+				hoverTimerm6=new Timer(ValueHolder.hoverTime,1);
+				hoverTimert1=new Timer(ValueHolder.hoverTime,1);
+				hoverTimert2=new Timer(ValueHolder.hoverTime,1);
 			}
 		}
 		private function distanceUp(e:MouseEvent):void
 		{
-			sensorDistance += 200;
-			distanceText.text = String(sensorDistance);
+			ValueHolder.sensorDistance += 200;
+			distanceText.text = String(ValueHolder.sensorDistance);
 		}
 		private function distanceDown(e:MouseEvent):void
 		{
-			sensorDistance -= 200;
-			distanceText.text = String(sensorDistance);
+			ValueHolder.sensorDistance -= 200;
+			distanceText.text = String(ValueHolder.sensorDistance);
 		}
 		private function handForward(e:MouseEvent):void
 		{
-			handDistance -= 50;
-			handText.text = String(handDistance * -1);
+			ValueHolder.handDistance -= 50;
+			handText.text = String(ValueHolder.handDistance * -1);
 		}
 		private function handBackward(e:MouseEvent):void
 		{
-			handDistance += 50;
-			handText.text = String(handDistance * -1);
+			ValueHolder.handDistance += 50;
+			handText.text = String(ValueHolder.handDistance * -1);
 		}
 		
 		//以下是所有需要用到kinect数据的function
@@ -253,10 +249,17 @@
 			if(theSelectedUser !== null)
 			{
 				traceText.text = String(ValueHolder.righthandWaveSum);
-				getUser.displaySelectedUser(kinectWindowWidth, kinectWindowHeight);
-				//trace(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x);
+				
+				//给kinect小窗口的人体关节画点
+				for each(var joint:SkeletonJoint in theSelectedUser.skeletonJoints)
+				{
+					skeletonContainer.graphics.beginFill(0x00FC00);
+					skeletonContainer.graphics.drawCircle(joint.position.rgbRelative.x*kinectWindowWidth, joint.position.rgbRelative.y*kinectWindowHeight, 3);
+					skeletonContainer.graphics.endFill();
+				}
+
 				//左右手光标跟踪用户骨骼的方法
-				if(smoothedJoints.smoothedRighthandZ - smoothedJoints.smoothedTorsoZ < handDistance)
+				if(smoothedJoints.smoothedRighthandZ - smoothedJoints.smoothedTorsoZ < ValueHolder.handDistance)
 				{
 					cursorRighthand.visible = true;
 					righthandLoadingCircle.visible = true;
@@ -276,7 +279,7 @@
 					righthandLoadingCircle.x = -100;
 					righthandLoadingCircle.y = -100;
 				}
-				if(theSelectedUser.leftHand.position.world.z - theSelectedUser.torso.position.world.z < handDistance)
+				if(theSelectedUser.leftHand.position.world.z - theSelectedUser.torso.position.world.z < ValueHolder.handDistance)
 				{
 					cursorLefthand.visible = true;
 					lefthandLoadingCircle.visible = true;

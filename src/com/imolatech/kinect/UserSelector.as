@@ -20,7 +20,7 @@
 			this.kinect = kinect;
 			if(theSelectedUser !== null)
 			{
-				if(theSelectedUser.position.world.z< Main.sensorDistance || theSelectedUser.position.world.z>Main.sensorDistance+1000 || theSelectedUser.position.world.x<-450 || theSelectedUser.position.world.x>450)
+				if(theSelectedUser.position.world.z< ValueHolder.sensorDistance || theSelectedUser.position.world.z>ValueHolder.sensorDistance+1000 || theSelectedUser.position.world.x<-450 || theSelectedUser.position.world.x>450)
 				{
 					theSelectedUser = null;
 				}
@@ -32,7 +32,7 @@
 				{
 					//trace(345);
 					//被选择人的范围为离kinect距离2000毫米至3000毫米之间，左右距离中心点500毫米之间的一个1平方米的区域
-					if(user.position.world.z>Main.sensorDistance && user.position.world.z<Main.sensorDistance+1000 && user.position && user.position.world.x>-500 && user.position.world.x<500)
+					if(user.position.world.z>ValueHolder.sensorDistance && user.position.world.z<ValueHolder.sensorDistance+1000 && user.position && user.position.world.x>-500 && user.position.world.x<500)
 					{
 						userInAreaZ.push(user.position.world.z);
 						userInAreaZ.sort(Array.NUMERIC);
@@ -42,20 +42,6 @@
 							theSelectedUserIds[0] = user.trackingID;
 						}
 					}
-				}
-			}
-		}
-		
-		public function displaySelectedUser(kinectWindowWidth:Number, kinectWindowHeight:Number)
-		{
-			Main.skeletonContainer.graphics.clear();
-			if(theSelectedUser !==null)
-			{
-				for each(var joint:SkeletonJoint in theSelectedUser.skeletonJoints)
-				{
-					Main.skeletonContainer.graphics.beginFill(0x00FC00);
-					Main.skeletonContainer.graphics.drawCircle(joint.position.rgbRelative.x*kinectWindowWidth, joint.position.rgbRelative.y*kinectWindowHeight, 3);
-					Main.skeletonContainer.graphics.endFill();
 				}
 			}
 		}

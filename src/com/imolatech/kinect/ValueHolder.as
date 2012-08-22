@@ -63,6 +63,10 @@
 		public static var torsoYArray:Array = new Array;
 		public static var torsoZArray:Array = new Array;
 		
+		public static var sensorDistance:Number = 2000;
+		public static var handDistance:Number = -50;
+		public static var hoverTime:Number = 1000;
+		
 		public function ValueHolder() 
 		{
 		
