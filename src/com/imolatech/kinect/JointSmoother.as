@@ -2,133 +2,191 @@
 {
 	import com.as3nui.nativeExtensions.air.kinect.data.User;
 	import com.as3nui.nativeExtensions.air.kinect.data.SkeletonJoint
-	import com.imolatech.kinect.ValueHolder;
 	
-	public class JointSmoother {
+	public class JointSmoother 
+	{
 		
-		public var smoothedRighthandX:Number = 0;
-		public var smoothedRighthandY:Number = 0;
-		public var smoothedRighthandZ:Number = 0;
-		public var smoothedLefthandX:Number = 0;
-		public var smoothedLefthandY:Number = 0;
-		public var smoothedLefthandZ:Number = 0;
-		public var smoothedTorsoX:Number = 0;
-		public var smoothedTorsoY:Number = 0;
-		public var smoothedTorsoZ:Number = 0;
-		public var righthandXSum:Number = 0;
-		public var righthandYSum:Number = 0;
-		public var righthandZSum:Number = 0;
-		public var lefthandXSum:Number = 0;
-		public var lefthandYSum:Number = 0;
-		public var lefthandZSum:Number = 0;
-		public var torsoXSum:Number = 0;
-		public var torsoYSum:Number = 0;
-		public var torsoZSum:Number = 0;
+		private var smoothedRighthandX:Number = 0;
+		private var smoothedRighthandY:Number = 0;
+		private var smoothedRighthandZ:Number = 0;
+		private var smoothedLefthandX:Number = 0;
+		private var smoothedLefthandY:Number = 0;
+		private var smoothedLefthandZ:Number = 0;
+		private var smoothedTorsoX:Number = 0;
+		private var smoothedTorsoY:Number = 0;
+		private var smoothedTorsoZ:Number = 0;
+		private var righthandXSum:Number = 0;
+		private var righthandYSum:Number = 0;
+		private var righthandZSum:Number = 0;
+		private var lefthandXSum:Number = 0;
+		private var lefthandYSum:Number = 0;
+		private var lefthandZSum:Number = 0;
+		private var torsoXSum:Number = 0;
+		private var torsoYSum:Number = 0;
+		private var torsoZSum:Number = 0;
+		private var righthandXArray:Array = new Array();
+		private var righthandYArray:Array = new Array();
+		private var righthandZArray:Array = new Array();
+		private var lefthandXArray:Array = new Array();
+		private var lefthandYArray:Array = new Array();
+		private var lefthandZArray:Array = new Array();
+		private var torsoXArray:Array = new Array();
+		private var torsoYArray:Array = new Array();
+		private var torsoZArray:Array = new Array();
 		
-		public var theSelectedUser:User;
-		public var smoothParameter:uint;
+		private var theSelectedUser:User;
+		private var smoothParameter:uint;
 		
 		public function JointSmoother(theSelectedUser:User, smoothParameter:uint)
 		{
 			this.theSelectedUser = theSelectedUser;
 			this.smoothParameter = smoothParameter;
+		}
+
+		public function smoothJoints():void
+		{
 			if(theSelectedUser !== null)
 			{
-			ValueHolder.righthandXArray.push(theSelectedUser.rightHand.position.world.x);
-			ValueHolder.righthandYArray.push(theSelectedUser.rightHand.position.world.y);
-			ValueHolder.righthandZArray.push(theSelectedUser.rightHand.position.world.z);
-			ValueHolder.lefthandXArray.push(theSelectedUser.leftHand.position.world.x);
-			ValueHolder.lefthandYArray.push(theSelectedUser.leftHand.position.world.y);
-			ValueHolder.lefthandZArray.push(theSelectedUser.leftHand.position.world.z);
-			ValueHolder.torsoXArray.push(theSelectedUser.torso.position.world.x);
-			ValueHolder.torsoYArray.push(theSelectedUser.torso.position.world.y);
-			ValueHolder.torsoZArray.push(theSelectedUser.torso.position.world.z);
+				righthandXArray.push(theSelectedUser.rightHand.position.world.x);
+				righthandYArray.push(theSelectedUser.rightHand.position.world.y);
+				righthandZArray.push(theSelectedUser.rightHand.position.world.z);
+				lefthandXArray.push(theSelectedUser.leftHand.position.world.x);
+				lefthandYArray.push(theSelectedUser.leftHand.position.world.y);
+				lefthandZArray.push(theSelectedUser.leftHand.position.world.z);
+				torsoXArray.push(theSelectedUser.torso.position.world.x);
+				torsoYArray.push(theSelectedUser.torso.position.world.y);
+				torsoZArray.push(theSelectedUser.torso.position.world.z);
 			
-			var i:int;
-			if(ValueHolder.righthandXArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				var i:int;
+				if(righthandXArray.length == smoothParameter+1)
 				{
-					righthandXSum = righthandXSum + ValueHolder.righthandXArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						righthandXSum = righthandXSum + righthandXArray[i];
+					}
+					smoothedRighthandX = righthandXSum/(smoothParameter+1);
+					righthandXArray.shift();
+					righthandXSum = 0;
 				}
-				smoothedRighthandX = righthandXSum/(smoothParameter+1);
-				ValueHolder.righthandXArray.shift();
-			}
-			if(ValueHolder.righthandYArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(righthandYArray.length == smoothParameter+1)
 				{
-					righthandYSum = righthandYSum + ValueHolder.righthandYArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						righthandYSum = righthandYSum + righthandYArray[i];
+					}
+					smoothedRighthandY = righthandYSum/(smoothParameter+1)
+					righthandYArray.shift();
+					righthandYSum = 0;
 				}
-				smoothedRighthandY = righthandYSum/(smoothParameter+1)
-				ValueHolder.righthandYArray.shift();
-			}
-			if(ValueHolder.righthandZArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(righthandZArray.length == smoothParameter+1)
 				{
-					righthandZSum = righthandZSum + ValueHolder.righthandZArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						righthandZSum = righthandZSum + righthandZArray[i];
+					}
+					smoothedRighthandZ = righthandZSum/(smoothParameter+1)
+					righthandZArray.shift();
+					righthandZSum = 0;
 				}
-				smoothedRighthandZ = righthandZSum/(smoothParameter+1)
-				ValueHolder.righthandZArray.shift();
-			}
-			if(ValueHolder.lefthandXArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(lefthandXArray.length == smoothParameter+1)
 				{
-					lefthandXSum = lefthandXSum + ValueHolder.lefthandXArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						lefthandXSum = lefthandXSum + lefthandXArray[i];
+					}
+					smoothedLefthandX = lefthandXSum/(smoothParameter+1)
+					lefthandXArray.shift();
+					lefthandXSum = 0;
 				}
-				smoothedLefthandX = lefthandXSum/(smoothParameter+1)
-				ValueHolder.lefthandXArray.shift();
-			}
-			if(ValueHolder.lefthandYArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(lefthandYArray.length == smoothParameter+1)
 				{
-					lefthandYSum = lefthandYSum + ValueHolder.lefthandYArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						lefthandYSum = lefthandYSum + lefthandYArray[i];
+					}
+					smoothedLefthandY = lefthandYSum/(smoothParameter+1)
+					lefthandYArray.shift();
+					lefthandYSum = 0;
 				}
-				smoothedLefthandY = lefthandYSum/(smoothParameter+1)
-				ValueHolder.lefthandYArray.shift();
-			}
-			if(ValueHolder.lefthandZArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(lefthandZArray.length == smoothParameter+1)
 				{
-					lefthandZSum = lefthandZSum + ValueHolder.lefthandZArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						lefthandZSum = lefthandZSum + lefthandZArray[i];
+					}
+					smoothedLefthandZ = lefthandZSum/(smoothParameter+1)
+					lefthandZArray.shift();
+					lefthandZSum = 0;
 				}
-				smoothedLefthandZ = lefthandZSum/(smoothParameter+1)
-				ValueHolder.lefthandZArray.shift();
-			}
-			if(ValueHolder.torsoXArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(torsoXArray.length == smoothParameter+1)
 				{
-					torsoXSum = torsoXSum + ValueHolder.torsoXArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						torsoXSum = torsoXSum + torsoXArray[i];
+					}
+					smoothedTorsoX = torsoXSum/(smoothParameter+1);
+					torsoXArray.shift();
+					torsoXSum = 0;
 				}
-				smoothedTorsoX = torsoXSum/(smoothParameter+1);
-				ValueHolder.torsoXArray.shift();
-			}
-			if(ValueHolder.torsoYArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(torsoYArray.length == smoothParameter+1)
 				{
-					torsoYSum = torsoYSum + ValueHolder.torsoYArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						torsoYSum = torsoYSum + torsoYArray[i];
+					}
+					smoothedTorsoY = torsoYSum/(smoothParameter+1)
+					torsoYArray.shift();
+					torsoYSum = 0;
 				}
-				smoothedTorsoY = torsoYSum/(smoothParameter+1)
-				ValueHolder.torsoYArray.shift();
-			}
-			if(ValueHolder.torsoZArray.length == smoothParameter+1)
-			{
-				for(i=0;i<smoothParameter+1;i++)
+				if(torsoZArray.length == smoothParameter+1)
 				{
-					torsoZSum = torsoZSum + ValueHolder.torsoZArray[i]
+					for(i=0;i<smoothParameter+1;i++)
+					{
+						torsoZSum = torsoZSum + torsoZArray[i];
+					}
+					smoothedTorsoZ = torsoZSum/(smoothParameter+1)
+					torsoZArray.shift();
+					torsoZSum = 0;
 				}
-				smoothedTorsoZ = torsoZSum/(smoothParameter+1)
-				ValueHolder.torsoZArray.shift();
-			}
 			}
 		}
 
+		public function get righthandX():Number
+		{
+			return smoothedRighthandX;
+		}
+		public function get righthandY():Number
+		{
+			return smoothedRighthandY;
+		}
+		public function get righthandZ():Number
+		{
+			return smoothedRighthandZ;
+		}
+		public function get lefthandX():Number
+		{
+			return smoothedLefthandX;
+		}
+		public function get lefthandY():Number
+		{
+			return smoothedLefthandY;
+		}
+		public function get lefthandZ():Number
+		{
+			return smoothedLefthandZ;
+		}
+		public function get torsoX():Number
+		{
+			return smoothedTorsoX;
+		}
+		public function get torsoY():Number
+		{
+			return smoothedTorsoY;
+		}
+		public function get torsoZ():Number
+		{
+			return smoothedTorsoZ;
+		}
 	}
 	
 }

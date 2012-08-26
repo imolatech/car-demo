@@ -10,28 +10,60 @@
 	
 	public class GestureDetector extends MovieClip
 	{
-		public var righthandHorizontalMoveStep:Number;
-		public var righthandVerticalMoveStep:Number;
-		public var righthandDepthMoveStep:Number
-		public var righthandXNew:Number;
-		public var righthandYNew:Number;
-		public var righthandZNew:Number;
+		private var righthandHorizontalMoveStep:Number;
+		private var righthandVerticalMoveStep:Number;
+		private var righthandDepthMoveStep:Number
+		private var righthandXNew:Number;
+		private var righthandYNew:Number;
+		private var righthandZNew:Number;
+		private var righthandXOld:Number = 0;
+		private var righthandYOld:Number = 0;
+		private var righthandZOld:Number = 0;
+		private var righthandMoveLeftSum:Number = 0;
+		private var righthandMoveRightSum:Number = 0;
+		private var righthandMoveUpSum:Number = 0;
+		private var righthandMoveDownSum:Number = 0;
+		private var righthandSwipeLeft:Boolean;
+		private var righthandSwipeRight:Boolean;
+		private var righthandSwipeUp:Boolean;
+		private var righthandSwipeDown:Boolean;
+		private var righthandWave:Boolean;
+		private var righthandPrePosition:Number = 0;
+		private var righthandWaveSum:Number = 0;
 
-		public var lefthandHorizontalMoveStep:Number;
-		public var lefthandVerticalMoveStep:Number;
-		public var lefthandDepthMoveStep:Number
-		public var lefthandXNew:Number;
-		public var lefthandYNew:Number;
-		public var lefthandZNew:Number;		
+		private var lefthandHorizontalMoveStep:Number;
+		private var lefthandVerticalMoveStep:Number;
+		private var lefthandDepthMoveStep:Number
+		private var lefthandXNew:Number;
+		private var lefthandYNew:Number;
+		private var lefthandZNew:Number;	
+		private var lefthandXOld:Number = 0;
+		private var lefthandYOld:Number = 0;
+		private var lefthandZOld:Number = 0;	
+		private var lefthandMoveLeftSum:Number = 0;
+		private var lefthandMoveRightSum:Number = 0;
+		private var lefthandMoveUpSum:Number = 0;
+		private var lefthandMoveDownSum:Number = 0;
+		private var lefthandSwipeLeft:Boolean;
+		private var lefthandSwipeRight:Boolean;
+		private var lefthandSwipeUp:Boolean;
+		private var lefthandSwipeDown:Boolean;
+		private var lefthandWave:Boolean;
 
-		public var torsoHorizontalMoveStep:Number;
-		public var torsoVerticalMoveStep:Number;
-		public var torsoDepthMoveStep:Number
-		public var torsoXNew:Number;
-		public var torsoYNew:Number;
-		public var torsoZNew:Number;
+		private var torsoHorizontalMoveStep:Number;
+		private var torsoVerticalMoveStep:Number;
+		private var torsoDepthMoveStep:Number
+		private var torsoXNew:Number;
+		private var torsoYNew:Number;
+		private var torsoZNew:Number;
+		private var torsoXOld:Number = 0;
+		private var torsoYOld:Number = 0;
+		private var torsoZOld:Number = 0;
 		
-		public var theSelectedUser:User;
+		private var idleTimer:Timer = new Timer(1000,1);
+		private var waveTimer:Timer = new Timer(1000,1);
+		
+		private var theSelectedUser:User;
 		
 		public function GestureDetector(theSelectedUser:User) 
 		{
@@ -47,255 +79,255 @@
 				righthandYNew = theSelectedUser.rightHand.position.world.y;
 				righthandZNew = theSelectedUser.rightHand.position.world.z;
 				
-				righthandHorizontalMoveStep = righthandXNew - ValueHolder.righthandXOld;
-				righthandVerticalMoveStep = righthandYNew - ValueHolder.righthandYOld;
-				righthandDepthMoveStep = righthandZNew - ValueHolder.righthandZOld;
+				righthandHorizontalMoveStep = righthandXNew - righthandXOld;
+				righthandVerticalMoveStep = righthandYNew - righthandYOld;
+				righthandDepthMoveStep = righthandZNew - righthandZOld;
 				
-				ValueHolder.righthandXOld = righthandXNew;
-				ValueHolder.righthandYOld = righthandYNew;
-				ValueHolder.righthandZOld = righthandZNew;
+				righthandXOld = righthandXNew;
+				righthandYOld = righthandYNew;
+				righthandZOld = righthandZNew;
 		
 				//左手点以及左右上下挥动的位移
 				lefthandXNew = theSelectedUser.leftHand.position.world.x;
 				lefthandYNew = theSelectedUser.leftHand.position.world.y;
 				lefthandZNew = theSelectedUser.leftHand.position.world.z;
 				
-				lefthandHorizontalMoveStep = lefthandXNew - ValueHolder.lefthandXOld;
-				lefthandVerticalMoveStep = lefthandYNew - ValueHolder.lefthandYOld;
-				lefthandDepthMoveStep = lefthandZNew - ValueHolder.lefthandZOld;
+				lefthandHorizontalMoveStep = lefthandXNew - lefthandXOld;
+				lefthandVerticalMoveStep = lefthandYNew - lefthandYOld;
+				lefthandDepthMoveStep = lefthandZNew - lefthandZOld;
 				
-				ValueHolder.lefthandXOld = lefthandXNew;
-				ValueHolder.lefthandYOld = lefthandYNew;
-				ValueHolder.lefthandZOld = lefthandZNew;
+				lefthandXOld = lefthandXNew;
+				lefthandYOld = lefthandYNew;
+				lefthandZOld = lefthandZNew;
 		
 				//躯干部位点以及左右上下挥动的位移，用以判断用户是否处于稳定站立状态
 				torsoXNew = theSelectedUser.torso.position.world.x;
 				torsoYNew = theSelectedUser.torso.position.world.y;
 				torsoZNew = theSelectedUser.torso.position.world.z;
 				
-				torsoHorizontalMoveStep = torsoXNew - ValueHolder.torsoXOld;
-				torsoVerticalMoveStep = torsoYNew - ValueHolder.torsoYOld;
-				torsoDepthMoveStep = torsoZNew - ValueHolder.torsoZOld;
+				torsoHorizontalMoveStep = torsoXNew - torsoXOld;
+				torsoVerticalMoveStep = torsoYNew - torsoYOld;
+				torsoDepthMoveStep = torsoZNew - torsoZOld;
 				
-				ValueHolder.torsoXOld = torsoXNew;
-				ValueHolder.torsoYOld = torsoYNew;
-				ValueHolder.torsoZOld = torsoZNew;
+				torsoXOld = torsoXNew;
+				torsoYOld = torsoYNew;
+				torsoZOld = torsoZNew;
 				
 				//判断是否右手向左挥动	
 				if(righthandHorizontalMoveStep<-40 && Math.abs(righthandVerticalMoveStep)<35 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.righthandSwipeLeft = false;
+						righthandMoveLeftSum = 0;
+						righthandSwipeLeft = false;
 						return
 					}
 					else
 					{
-						ValueHolder.righthandMoveLeftSum++;
-						if(ValueHolder.righthandMoveLeftSum>2 && righthandDepthMoveStep>35)
+						righthandMoveLeftSum++;
+						if(righthandMoveLeftSum>2 && righthandDepthMoveStep>35)
 						{
-							ValueHolder.righthandSwipeLeft = true;
-							ValueHolder.righthandMoveLeftSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							righthandSwipeLeft = true;
+							righthandMoveLeftSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				
 				else
 				{
-					ValueHolder.righthandMoveLeftSum=0;
-					ValueHolder.righthandSwipeLeft = false;
+					righthandMoveLeftSum=0;
+					righthandSwipeLeft = false;
 				}
 				
 				//判断是否右手向右挥动
 				if(righthandHorizontalMoveStep>40 && Math.abs(righthandVerticalMoveStep)<35 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.righthandSwipeRight = false;
+						righthandMoveRightSum = 0;
+						righthandSwipeRight = false;
 						return
 					}
 					else
 					{
-						ValueHolder.righthandMoveRightSum++;
-						if(ValueHolder.righthandMoveRightSum>2 && righthandDepthMoveStep>35)
+						righthandMoveRightSum++;
+						if(righthandMoveRightSum>2 && righthandDepthMoveStep>35)
 						{
-							ValueHolder.righthandSwipeRight = true;
-							ValueHolder.righthandMoveRightSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							righthandSwipeRight = true;
+							righthandMoveRightSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.righthandMoveRightSum=0;
-					ValueHolder.righthandSwipeRight = false;
+					righthandMoveRightSum=0;
+					righthandSwipeRight = false;
 				}
 				
 				//判断是否右手向上挥动:有待改进，目前用户在做自燃动作时（比如用手扶眼镜），可能会误触发
 				if(righthandVerticalMoveStep>40 && Math.abs(righthandHorizontalMoveStep)<30 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.righthandSwipeUp = false;
+						righthandMoveLeftSum = 0;
+						righthandSwipeUp = false;
 						return
 					}
 					else
 					{
-						ValueHolder.righthandMoveUpSum++;
-						if(ValueHolder.righthandMoveUpSum>2 && righthandDepthMoveStep>25)
+						righthandMoveUpSum++;
+						if(righthandMoveUpSum>2 && righthandDepthMoveStep>25)
 						{
-							ValueHolder.righthandSwipeUp = true;
-							ValueHolder.righthandMoveUpSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							righthandSwipeUp = true;
+							righthandMoveUpSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.righthandMoveUpSum=0;
-					ValueHolder.righthandSwipeUp = false;
+					righthandMoveUpSum=0;
+					righthandSwipeUp = false;
 				}
 		
 				//判断是否右手向下挥动
 				if(righthandVerticalMoveStep<-40 && Math.abs(righthandHorizontalMoveStep)<30 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.righthandSwipeDown = false;
+						righthandMoveLeftSum = 0;
+						righthandSwipeDown = false;
 						return
 					}
 					else
 					{
-						ValueHolder.righthandMoveDownSum++;
-						if(ValueHolder.righthandMoveDownSum>2 && righthandDepthMoveStep>25 && theSelectedUser.rightHip.position.world.y > theSelectedUser.rightHand.position.world.y)
+						righthandMoveDownSum++;
+						if(righthandMoveDownSum>2 && righthandDepthMoveStep>25 && theSelectedUser.rightHip.position.world.y > theSelectedUser.rightHand.position.world.y)
 						{
-							ValueHolder.righthandSwipeDown = true;
-							ValueHolder.righthandMoveDownSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							righthandSwipeDown = true;
+							righthandMoveDownSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.righthandMoveDownSum=0;
-					ValueHolder.righthandSwipeDown = false;
+					righthandMoveDownSum=0;
+					righthandSwipeDown = false;
 				}
 		
 				//判断是否左手向左挥动
 				if(lefthandHorizontalMoveStep<-40 && Math.abs(lefthandVerticalMoveStep)<25 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.lefthandSwipeLeft = false;
+						righthandMoveLeftSum = 0;
+						lefthandSwipeLeft = false;
 						return
 					}
 					else
 					{
-						ValueHolder.lefthandMoveLeftSum++;
-						if(ValueHolder.lefthandMoveLeftSum>2 && lefthandDepthMoveStep>35)
+						lefthandMoveLeftSum++;
+						if(lefthandMoveLeftSum>2 && lefthandDepthMoveStep>35)
 						{
-							ValueHolder.lefthandSwipeLeft = true;
-							ValueHolder.lefthandMoveLeftSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							lefthandSwipeLeft = true;
+							lefthandMoveLeftSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.lefthandMoveLeftSum=0;
-					ValueHolder.lefthandSwipeLeft = false;
+					lefthandMoveLeftSum=0;
+					lefthandSwipeLeft = false;
 				}
 		
 				//判断是否左手向右挥动
 				if(lefthandHorizontalMoveStep>40 && Math.abs(lefthandVerticalMoveStep)<25 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.lefthandSwipeRight = false;
+						righthandMoveLeftSum = 0;
+						lefthandSwipeRight = false;
 						return
 					}
 					else
 					{
-						ValueHolder.lefthandMoveRightSum++;
-						if(ValueHolder.lefthandMoveRightSum>2 && lefthandDepthMoveStep>35)
+						lefthandMoveRightSum++;
+						if(lefthandMoveRightSum>2 && lefthandDepthMoveStep>35)
 						{
-							ValueHolder.lefthandSwipeRight = true;
-							ValueHolder.lefthandMoveRightSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							lefthandSwipeRight = true;
+							lefthandMoveRightSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.lefthandMoveRightSum=0;
-					ValueHolder.lefthandSwipeRight = false;
+					lefthandMoveRightSum=0;
+					lefthandSwipeRight = false;
 				}
 		
 				//判断是否左手向上挥动：有待改进，目前用户在做自然动作时（比如用手扶眼镜），可能会误触发
 				if(lefthandVerticalMoveStep>40 && Math.abs(lefthandHorizontalMoveStep)<30 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.lefthandSwipeUp = false;
+						righthandMoveLeftSum = 0;
+						lefthandSwipeUp = false;
 						return
 					}
 					else
 					{
-						ValueHolder.lefthandMoveUpSum++;
-						if(ValueHolder.lefthandMoveUpSum>2 && lefthandDepthMoveStep>25)
+						lefthandMoveUpSum++;
+						if(lefthandMoveUpSum>2 && lefthandDepthMoveStep>25)
 						{
-							ValueHolder.lefthandSwipeUp = true;
-							ValueHolder.lefthandMoveUpSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							lefthandSwipeUp = true;
+							lefthandMoveUpSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.lefthandMoveUpSum=0;
-					ValueHolder.lefthandSwipeUp = false;
+					lefthandMoveUpSum=0;
+					lefthandSwipeUp = false;
 				}
 		
 				//判断是否左手向下挥动
 				if(lefthandVerticalMoveStep<-40 && Math.abs(lefthandHorizontalMoveStep)<30 && Math.abs(torsoHorizontalMoveStep)<10 &&  Math.abs(torsoVerticalMoveStep)<10)
 				{
-					if(ValueHolder.idleTimer.running)
+					if(idleTimer.running)
 					{
-						ValueHolder.righthandMoveLeftSum = 0;
-						ValueHolder.lefthandSwipeDown = false;
+						righthandMoveLeftSum = 0;
+						lefthandSwipeDown = false;
 						return
 					}
 					else
 					{
-						ValueHolder.lefthandMoveDownSum++;
-						if(ValueHolder.lefthandMoveDownSum>2 && lefthandDepthMoveStep>25 && theSelectedUser.leftHip.position.world.y > theSelectedUser.leftHand.position.world.y)
+						lefthandMoveDownSum++;
+						if(lefthandMoveDownSum>2 && lefthandDepthMoveStep>25 && theSelectedUser.leftHip.position.world.y > theSelectedUser.leftHand.position.world.y)
 						{
-							ValueHolder.lefthandSwipeDown = true;
-							ValueHolder.lefthandMoveDownSum = 0;
-							ValueHolder.idleTimer = new Timer(1000,1)
-							ValueHolder.idleTimer.start();
+							lefthandSwipeDown = true;
+							lefthandMoveDownSum = 0;
+							idleTimer = new Timer(1000,1)
+							idleTimer.start();
 						}
 					}
 				}
 				else
 				{
-					ValueHolder.lefthandMoveDownSum=0;
-					ValueHolder.lefthandSwipeDown = false;
+					lefthandMoveDownSum=0;
+					lefthandSwipeDown = false;
 				}
 			}
 		}
@@ -305,66 +337,102 @@
 			if(theSelectedUser !== null)
 			{
 				
-				if(ValueHolder.waveTimer.running == false)
+				if(waveTimer.running == false)
 				{
-					ValueHolder.righthandWaveSum = 0;
+					righthandWaveSum = 0;
 				}
 				
-				if(ValueHolder.righthandWaveSum ==4)
+				if(righthandWaveSum ==4)
 				{
-					ValueHolder.righthandWaveSum = 0;
-					ValueHolder.righthandWave = true;
-					ValueHolder.idleTimer.start();
+					righthandWaveSum = 0;
+					righthandWave = true;
+					idleTimer.start();
 				}
 				else
 				{
-					ValueHolder.righthandWave = false;
+					righthandWave = false;
 				}
 				
-				if(ValueHolder.waveTimer.running == false && ValueHolder.idleTimer.running == false)
+				if(waveTimer.running == false && idleTimer.running == false)
 				{
-					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && ValueHolder.righthandPrePosition == 0)
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && righthandPrePosition == 0)
 					{
-						ValueHolder.righthandPrePosition = 1;
+						righthandPrePosition = 1;
 					}
-					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && ValueHolder.righthandPrePosition == 0)
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && righthandPrePosition == 0)
 					{
-						ValueHolder.righthandPrePosition = 2;
+						righthandPrePosition = 2;
 					}
-					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && ValueHolder.righthandPrePosition == 2)
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && righthandPrePosition == 2)
 					{
-						ValueHolder.righthandPrePosition = 1;
-						ValueHolder.righthandWaveSum++;
-						ValueHolder.waveTimer.start();
+						righthandPrePosition = 1;
+						righthandWaveSum++;
+						waveTimer.start();
 					}
-					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && ValueHolder.righthandPrePosition == 1)
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && righthandPrePosition == 1)
 					{
-						ValueHolder.righthandPrePosition = 2;
-						ValueHolder.righthandWaveSum++;
-						ValueHolder.waveTimer.start();
+						righthandPrePosition = 2;
+						righthandWaveSum++;
+						waveTimer.start();
 					}
 				}
 				
-				if(ValueHolder.waveTimer.running == true && ValueHolder.idleTimer.running == false)
+				if(waveTimer.running == true && idleTimer.running == false)
 				{
-					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && ValueHolder.righthandPrePosition == 2)
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x < -50 && righthandPrePosition == 2)
 					{
-						ValueHolder.righthandPrePosition = 1;
-						ValueHolder.righthandWaveSum++;
-						ValueHolder.waveTimer.stop();
-						ValueHolder.waveTimer.reset();
-						ValueHolder.waveTimer.start();
+						righthandPrePosition = 1;
+						righthandWaveSum++;
+						waveTimer.stop();
+						waveTimer.reset();
+						waveTimer.start();
 					}
-					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && ValueHolder.righthandPrePosition == 1)
+					if(theSelectedUser.rightHand.position.world.x - theSelectedUser.rightElbow.position.world.x > 30 && righthandPrePosition == 1)
 					{
-						ValueHolder.righthandPrePosition = 2;
-						ValueHolder.righthandWaveSum++;
-						ValueHolder.waveTimer.stop();
-						ValueHolder.waveTimer.reset();
-						ValueHolder.waveTimer.start();
+						righthandPrePosition = 2;
+						righthandWaveSum++;
+						waveTimer.stop();
+						waveTimer.reset();
+						waveTimer.start();
 					}
 				}
 			}
+		}
+		public function get righthandGoLeft():Boolean
+		{
+			return righthandSwipeLeft;
+		}
+		public function get righthandGoRight():Boolean
+		{
+			return righthandSwipeRight;
+		}
+		public function get righthandGoUp():Boolean
+		{
+			return righthandSwipeUp;
+		}
+		public function get righthandGoDown():Boolean
+		{
+			return righthandSwipeDown;
+		}
+		public function get lefthandGoLeft():Boolean
+		{
+			return lefthandSwipeLeft;
+		}
+		public function get lefthandGoRight():Boolean
+		{
+			return lefthandSwipeRight;
+		}
+		public function get lefthandGoUp():Boolean
+		{
+			return lefthandSwipeUp;
+		}
+		public function get lefthandGoDown():Boolean
+		{
+			return lefthandSwipeDown;
+		}
+		public function get rightWave():Boolean
+		{
+			return righthandWave;
 		}
 	}
 }

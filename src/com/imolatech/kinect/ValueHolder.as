@@ -53,16 +53,6 @@
 		public static var idleTimer:Timer = new Timer(1000,1);
 		public static var waveTimer:Timer = new Timer(1000,1);
 		
-		public static var righthandXArray:Array = new Array;
-		public static var righthandYArray:Array = new Array;
-		public static var righthandZArray:Array = new Array;
-		public static var lefthandXArray:Array = new Array;
-		public static var lefthandYArray:Array = new Array;
-		public static var lefthandZArray:Array = new Array;
-		public static var torsoXArray:Array = new Array;
-		public static var torsoYArray:Array = new Array;
-		public static var torsoZArray:Array = new Array;
-		
 		public static var sensorDistance:Number = 2000;
 		public static var handDistance:Number = -50;
 		public static var hoverTime:Number = 1000;

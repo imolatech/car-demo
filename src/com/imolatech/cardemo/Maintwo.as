@@ -43,6 +43,7 @@
 		public var interfaceThreeKinectEventTimer:Timer = new Timer(50,0);
 		public var kinectWindowWidth:Number = 320;	//kinect图像小窗口的宽度
 		public var kinectWindowHeight:Number = 240;	//kinect图像小窗口的高度
+		public var userRecognizeTimer:Timer = new Timer(2000,1)
 		var vidList_XML:XML;
 		var vidCount:int = 0;
 		var vidXmlLoader:URLLoader = new URLLoader();
@@ -145,7 +146,13 @@
 		
 		private function interfaceOneEnterFrameHandler(e:Event):void
 		{
-			
+			if(theSelectedUser !==null)
+			{
+				if(Math.abs(theSelectedUser.rightShoulder - theSelectedUser.leftShoulder) < 100)
+				{
+					userRecognizeTimer.addEventListener(TimerEvent.TIMER, userRecognize)
+				}
+			}
 		}
 		
 		private function interfaceTwoEnterFrameHandler(e:Event):void
@@ -229,6 +236,16 @@
 			vidCount++;
 		}
 		
+		private function userRecognize(e:TimerEvent):void
+		{
+			swipeAnimation.gotoAndPlay(1);
+			addEventListener(Event.ENTER_FRAME, swipeAndGoInterfaceTwo);
+		}
+		
+		private function swipeAndGoInterfaceTwo(e:Event):void
+		{
+			
+		}
 	}
 	
 }
