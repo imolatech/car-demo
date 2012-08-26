@@ -2,7 +2,6 @@
 {
 	import com.as3nui.nativeExtensions.air.kinect.data.User;
 	import com.as3nui.nativeExtensions.air.kinect.data.SkeletonJoint;
-	import com.imolatech.kinect.ValueHolder;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	import flash.events.Event;

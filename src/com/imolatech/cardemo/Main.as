@@ -94,7 +94,7 @@
 		private function xmlLoaded(e:Event):void
 		{
 			kinect.addEventListener(CameraImageEvent.RGB_IMAGE_UPDATE, rgbImageHandler);	//每当RGB图像更新时执行的事件
-			addEventListener(Event.ENTER_FRAME, handsHitTest);
+			addEventListener(Event.ENTER_FRAME, ifHandsHitAnything);
 			addEventListener(Event.ENTER_FRAME, buttonCheckHit);
 			addEventListener(Event.ENTER_FRAME, theSelectedUserChange);
 			kinectEventsTimer.addEventListener(TimerEvent.TIMER, kinectEvents);	//有关kinect数据的事件，使用timer，每秒执行20次
@@ -192,7 +192,7 @@
 			}
 		}
 		
-		private function handsHitTest(e:Event):void
+		private function ifHandsHitAnything(e:Event):void
 		{
 			//检测左手是否碰到任何按键
 			if(cursorLefthand.hitTestObject(m1) || cursorLefthand.hitTestObject(m2) || cursorLefthand.hitTestObject(m3) || cursorLefthand.hitTestObject(m4) 
